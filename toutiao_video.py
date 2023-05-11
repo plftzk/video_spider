@@ -27,7 +27,6 @@ UA_WEB_LIST = [
     "Mozilla/5.0 (Windows NT 6.0) AppleWebKit/536.5 (KHTML, like Gecko) Chrome/19.0.1084.36 Safari/536.5",
     "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/536.3 (KHTML, like Gecko) Chrome/19.0.1063.0 Safari/536.3",
     "Mozilla/5.0 (Windows NT 5.1) AppleWebKit/536.3 (KHTML, like Gecko) Chrome/19.0.1063.0 Safari/536.3",
-
 ]
 
 
@@ -39,10 +38,10 @@ def parse_interface():
     """
     # 此接口是通过fiddler抓包工具抓的
     res = requests.get("http://is.snssdk.com/api/news/feed/v82/?category=video", headers={
-                                        "User-Agent": random.choice(UA_WEB_LIST),
-                                        "Accept": "*/*",
-                                        "Accept-Language": "zh-CN,zh;q=0.9",
-                                    })
+        "User-Agent": random.choice(UA_WEB_LIST),
+        "Accept": "*/*",
+        "Accept-Language": "zh-CN,zh;q=0.9",
+    })
     if res.status_code == 200:
         # 解析第一层的json数据
         json_data = json.loads(res.text)
@@ -67,10 +66,10 @@ def parse_detail():
         # 接口一直请求  可以无限刷新
         for article_id in article_id_list:
             res = requests.get("https://www.toutiao.com/a{}".format(article_id), headers={
-                            "User-Agent": random.choice(UA_WEB_LIST),
-                            "Accept": "*/*",
-                            "Accept-Language": "zh-CN,zh;q=0.9"
-                        })
+                "User-Agent": random.choice(UA_WEB_LIST),
+                "Accept": "*/*",
+                "Accept-Language": "zh-CN,zh;q=0.9"
+            })
 
             # 获取视频id
             video_id = re.findall(r"videoId:\s?\'(\w{29,35})\'", res.text)
@@ -79,7 +78,7 @@ def parse_detail():
                 video_url = get_toutiao_video_url(video_id)
                 with requests.get(video_url, stream=True) as r:
                     # uuid4 生成不重复的视频名字， 也可以从json数据里面 提取出视频的源名称
-                    video_name = "./"+str(uuid.uuid4())+".mp4"
+                    video_name = "./" + str(uuid.uuid4()) + ".mp4"
                     with open(video_name, "wb") as f:
                         # 保存视频字节流
                         f.write(r.content)
